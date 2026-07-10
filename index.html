@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Keepsake — a gentle reading companion</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ============ HOME ============ -->
+<main id="screen-home" class="screen active">
+  <header class="home-header">
+    <h1 class="brand">Keepsake</h1>
+    <p class="tagline">A gentle reading companion</p>
+  </header>
+
+  <nav class="mode-grid" aria-label="Choose an activity">
+    <button class="mode-card" data-goto="screen-read">
+      <span class="mode-icon" aria-hidden="true">&#9998;</span>
+      <span class="mode-title">Read to me</span>
+      <span class="mode-desc">Paste text, open a document, or snap a photo of a page</span>
+    </button>
+
+    <button class="mode-card" data-goto="screen-stories">
+      <span class="mode-icon" aria-hidden="true">&#9788;</span>
+      <span class="mode-title">Story Time</span>
+      <span class="mode-desc">Listen to a story from the library</span>
+    </button>
+  </nav>
+</main>
+
+<!-- ============ READ TO ME ============ -->
+<main id="screen-read" class="screen">
+  <header class="screen-header">
+    <button class="home-btn" data-goto="screen-home">&#8962; Home</button>
+    <h2>Read to me</h2>
+  </header>
+
+  <div id="read-input" class="input-panel">
+    <div class="input-tabs" role="tablist">
+      <button class="tab-btn active" data-tab="tab-paste">Paste text</button>
+      <button class="tab-btn" data-tab="tab-file">Open a file</button>
+      <button class="tab-btn" data-tab="tab-photo">Snap a photo</button>
+    </div>
+
+    <section id="tab-paste" class="tab-panel active">
+      <textarea id="paste-box" rows="7"
+        placeholder="Paste or type anything here — a letter, an article, a recipe..."></textarea>
+      <button id="btn-read-paste" class="big-btn primary">Read it to me</button>
+    </section>
+
+    <section id="tab-file" class="tab-panel">
+      <p class="gentle-note">Open a PDF or text file and Keepsake will read it aloud.</p>
+      <input type="file" id="file-input" accept=".pdf,.txt" class="file-hidden">
+      <button id="btn-choose-file" class="big-btn primary">Choose a file</button>
+      <p id="file-status" class="gentle-note"></p>
+    </section>
+
+    <section id="tab-photo" class="tab-panel">
+      <p class="gentle-note">Take a photo of a printed page — a letter, a label, a newspaper — and Keepsake will read it out.</p>
+      <input type="file" id="photo-input" accept="image/*" capture="environment" class="file-hidden">
+      <button id="btn-choose-photo" class="big-btn primary">Take or choose a photo</button>
+      <p id="photo-status" class="gentle-note"></p>
+    </section>
+  </div>
+
+  <!-- Reader (appears when something is loaded) -->
+  <section id="reader" class="player hidden" aria-live="polite">
+    <h3 id="reader-title">Reading</h3>
+    <p id="reader-text" class="player-text"></p>
+    <div class="player-controls">
+      <button id="btn-reader-pause" class="big-btn primary">Pause</button>
+      <button id="btn-reader-restart" class="big-btn">Start over</button>
+      <button id="btn-reader-new" class="big-btn">Read something else</button>
+    </div>
+  </section>
+</main>
+
+<!-- ============ STORY TIME ============ -->
+<main id="screen-stories" class="screen">
+  <header class="screen-header">
+    <button class="home-btn" data-goto="screen-home">&#8962; Home</button>
+    <h2>Story Time</h2>
+  </header>
+  <div id="story-list" class="card-list"></div>
+  <section id="story-player" class="player hidden" aria-live="polite">
+    <h3 id="player-title"></h3>
+    <p id="player-paragraph" class="player-text"></p>
+    <div class="player-controls">
+      <button id="btn-continue" class="big-btn primary">Keep going</button>
+      <button id="btn-rest" class="big-btn">Rest for now</button>
+    </div>
+  </section>
+</main>
+
+<script src="js/config.js"></script>
+<script src="js/speech.js"></script>
+<script src="js/reader.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+/* ============================================
+   Keepsake — design system
+   Warm, calm, high-contrast, elderly-friendly
+   ============================================ */
+
+:root {
+  --bg: #faf6ee;            /* warm cream */
+  --bg-card: #ffffff;
+  --ink: #3b3128;           /* soft dark brown, not harsh black */
+  --ink-soft: #6f6257;
+  --accent: #c98a2d;        /* warm amber */
+  --accent-deep: #a56f1d;
+  --line: #e8dfd0;
+  --radius: 18px;
+  --shadow: 0 2px 10px rgba(59, 49, 40, 0.08);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { font-size: 20px; } /* large base type, everything scales from here */
+
+body {
+  font-family: Georgia, "Times New Roman", serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.65;
+  min-height: 100vh;
+}
+
+/* ---------- screens ---------- */
+.screen { display: none; max-width: 760px; margin: 0 auto; padding: 1.5rem 1.2rem 4rem; }
+.screen.active { display: block; }
+.hidden { display: none !important; }
+
+/* ---------- home ---------- */
+.home-header { text-align: center; padding: 2.5rem 0 2rem; }
+.brand { font-size: 2.6rem; letter-spacing: 0.5px; color: var(--accent-deep); }
+.tagline { color: var(--ink-soft); font-size: 1.05rem; margin-top: 0.3rem; }
+
+.mode-grid { display: grid; gap: 1.2rem; }
+@media (min-width: 620px) { .mode-grid { grid-template-columns: 1fr 1fr; } }
+
+.mode-card {
+  background: var(--bg-card);
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 2rem 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  font-family: inherit;
+  color: inherit;
+  transition: border-color 0.2s;
+  min-height: 190px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem;
+}
+.mode-card:hover, .mode-card:focus-visible { border-color: var(--accent); outline: none; }
+
+.mode-icon { font-size: 2.4rem; color: var(--accent); }
+.mode-title { font-size: 1.45rem; font-weight: bold; }
+.mode-desc { color: var(--ink-soft); font-size: 0.95rem; }
+
+.home-footer { text-align: center; margin-top: 3rem; }
+.quiet-link {
+  background: none; border: none; color: var(--ink-soft);
+  font-family: inherit; font-size: 0.9rem; text-decoration: underline; cursor: pointer;
+  padding: 0.8rem 1.2rem; /* still a big target */
+}
+
+/* ---------- shared header ---------- */
+.screen-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.6rem; }
+.screen-header h2 { font-size: 1.7rem; }
+.home-btn {
+  background: var(--bg-card); border: 2px solid var(--line); border-radius: 12px;
+  font-family: inherit; font-size: 1rem; color: var(--ink);
+  padding: 0.6rem 1rem; cursor: pointer;
+}
+.home-btn:hover, .home-btn:focus-visible { border-color: var(--accent); outline: none; }
+
+/* ---------- cards & lists ---------- */
+.card-list { display: grid; gap: 1rem; }
+.list-card {
+  background: var(--bg-card); border: 2px solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 1.3rem 1.5rem;
+  cursor: pointer; font-family: inherit; color: inherit; text-align: left;
+  font-size: 1.15rem; width: 100%;
+}
+.list-card:hover, .list-card:focus-visible { border-color: var(--accent); outline: none; }
+.list-card .card-sub { display: block; color: var(--ink-soft); font-size: 0.9rem; margin-top: 0.25rem; }
+
+/* ---------- player ---------- */
+.player { margin-top: 2rem; background: var(--bg-card); border: 2px solid var(--line);
+  border-radius: var(--radius); box-shadow: var(--shadow); padding: 2rem 1.7rem; }
+.player h3 { font-size: 1.4rem; margin-bottom: 1rem; color: var(--accent-deep); }
+.player-text { font-size: 1.3rem; line-height: 1.8; min-height: 5rem; }
+
+.player-controls { display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap; }
+
+.big-btn {
+  flex: 1; min-width: 180px; min-height: 64px;
+  font-family: inherit; font-size: 1.2rem;
+  background: var(--bg-card); color: var(--ink);
+  border: 2px solid var(--line); border-radius: 14px;
+  cursor: pointer;
+}
+.big-btn:hover, .big-btn:focus-visible { border-color: var(--accent); outline: none; }
+.big-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.big-btn.primary:hover, .big-btn.primary:focus-visible { background: var(--accent-deep); }
+
+/* ---------- memories ---------- */
+.memory-card { background: var(--bg-card); border: 2px solid var(--line);
+  border-radius: var(--radius); box-shadow: var(--shadow); padding: 2rem 1.7rem; }
+.memory-card h3 { font-size: 1.5rem; color: var(--accent-deep); margin-bottom: 1rem; }
+
+.gentle-note { color: var(--ink-soft); font-size: 1.05rem; max-width: 55ch; margin-bottom: 1.5rem; }
+
+/* ---------- caregiver form ---------- */
+.setup-form { display: grid; gap: 0.7rem; margin-bottom: 2.5rem; }
+.setup-form label { font-size: 1rem; color: var(--ink-soft); }
+.setup-form input, .setup-form textarea {
+  font-family: inherit; font-size: 1.1rem; color: var(--ink);
+  background: var(--bg-card); border: 2px solid var(--line); border-radius: 12px;
+  padding: 0.8rem 1rem; width: 100%;
+}
+.setup-form input:focus, .setup-form textarea:focus { border-color: var(--accent); outline: none; }
+.setup-form .big-btn { margin-top: 0.5rem; }
+
+/* ---------- speaking indicator ---------- */
+.speaking .player-text::after {
+  content: " ●";
+  color: var(--accent);
+  animation: pulse 1.4s infinite;
+}
+@keyframes pulse { 0%,100% { opacity: 0.25; } 50% { opacity: 1; } }
+
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+/* ---------- read-to-me input panel ---------- */
+.input-panel { background: var(--bg-card); border: 2px solid var(--line);
+  border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.5rem; }
+.input-tabs { display: flex; gap: 0.6rem; margin-bottom: 1.2rem; flex-wrap: wrap; }
+.tab-btn { font-family: inherit; font-size: 1.05rem; padding: 0.7rem 1.2rem;
+  background: var(--bg); color: var(--ink); border: 2px solid var(--line);
+  border-radius: 12px; cursor: pointer; }
+.tab-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+.tab-panel { display: none; }
+.tab-panel.active { display: grid; gap: 1rem; }
+#paste-box { font-family: inherit; font-size: 1.15rem; color: var(--ink);
+  background: var(--bg); border: 2px solid var(--line); border-radius: 12px;
+  padding: 1rem; width: 100%; resize: vertical; }
+#paste-box:focus { border-color: var(--accent); outline: none; }
+.file-hidden { display: none; }
