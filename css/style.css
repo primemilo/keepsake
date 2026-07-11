@@ -152,3 +152,48 @@ body {
   padding: 1rem; width: 100%; resize: vertical; }
 #paste-box:focus { border-color: var(--accent); outline: none; }
 .file-hidden { display: none; }
+/* ---------- depth & warmth polish (appended) ---------- */
+
+body {
+  background:
+    radial-gradient(ellipse at 50% -10%, #fdf8ec 0%, #faf3e3 55%, #f6edd8 100%);
+  background-attachment: fixed;
+}
+
+.brand {
+  text-shadow: 0 2px 0 rgba(200, 135, 30, 0.12);
+}
+
+.mode-card {
+  border: 1px solid #eadfc8;
+  box-shadow: 0 2px 4px rgba(120, 90, 30, 0.05), 0 10px 24px rgba(120, 90, 30, 0.07);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.mode-card:hover,
+.mode-card:focus-visible {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(120, 90, 30, 0.08), 0 16px 32px rgba(120, 90, 30, 0.11);
+}
+
+.mode-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #fbf1dc;
+  border: 1px solid #eeddb8;
+}
+
+.player, .input-panel {
+  box-shadow: 0 2px 4px rgba(120, 90, 30, 0.05), 0 10px 24px rgba(120, 90, 30, 0.06);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mode-card, .mode-card:hover, .mode-card:focus-visible {
+    transform: none;
+    transition: none;
+  }
+}
