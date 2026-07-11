@@ -70,6 +70,7 @@ export default {
         headers: {
           "Authorization": "Bearer " + env.FISH_API_KEY,
           "Content-Type": "application/json",
+          "model": "s2.1-pro-free",   // free through July 24, 2026 per Fish announcement
         },
         body: JSON.stringify(body),
       });
