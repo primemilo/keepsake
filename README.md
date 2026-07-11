@@ -1,86 +1,94 @@
 # Keepsake
 
-**A gentle reading companion — letters, documents, and bedtime stories, read aloud in the voices of the people you love.**
+Keepsake is a gentle reading companion. It reads letters, documents, bedtime
+stories, pretty much anything  out loud, in the voices of the people you love.
 
 Live: **https://primemilo.github.io/keepsake/**
 
-When a parent is away — on deployment, a work trip, or simply in another city — Keepsake can still read their child a bedtime story, in their own voice. A young child who hasn't seen mom or dad in weeks can fall asleep hearing them anyway. When a grandmother's eyes tire, a letter from a grandchild can be photographed and read aloud in that grandchild's voice — and just as easily, a grandparent can record their own voice so their grandchildren can hear them read a story back. Keepsake is not a replacement for being there. It is a bridge until the next call, the next visit.
+Why I built it: my sister has a little kid, and when she's at work or away,
+keeping the little guy calm is a real challenge. Sometimes we have to call
+her just so he can hear her voice. That's where the idea came from. If her
+voice is what calms him down, then her voice should be able to read him his
+bedtime story even when she can't be in the room.
+
+So that's what Keepsake does. You record about 20 seconds of someone's voice
+(or they send you a voice note from wherever they are), and from then on
+Keepsake can read anything in that voice. A story for a kid who misses their
+mom. A grandchild's letter read out loud for a grandmother whose eyes get
+tired. A grandfather recording his voice once so the kids can hear him read
+fables from another country.
+
+It's not meant to replace anyone. It's basically a bridge until the next call or the
+next visit.
 
 ## What it does
 
-- **Read to me** — paste any text, open a PDF or text file, or photograph a
-  printed page. Keepsake reads it aloud in warm, natural speech with gentle
-  pacing and simple controls: Pause, Start over, Read something else.
-- **Story Time** — a small library of classic fables, read through the same
-  engine. With a family voice selected, it becomes bedtime stories in a
-  parent's voice — a way for a child to stay familiar with a voice they
-  might not hear in person every day.
-- **Family voices** — record about 20 seconds of a loved one's voice (with
-  their permission), or upload a voice note they sent from far away. Keepsake
-  clones the voice through Fish Audio and reads everything in it. Voices can
-  be switched or removed at any time — a parent's voice for a bedtime story,
-  a grandchild's voice for grandma's letter, a grandparent's voice reading
-  back to the kids. The connection runs in both directions.
+**Read to me.** Paste any text, open a PDF or text file, or take a photo of
+a printed page and Keepsake reads it aloud. The controls are just Pause,
+Start over, and Read something else. Nothing to learn.
+
+**Story Time.** A small library of classic fables, read through the same
+engine. Pick a family voice first and it turns into bedtime stories in
+mom's voice.
+
+**Family voices.** Record a voice in the app, or upload a voice note sent
+over WhatsApp. Keepsake clones it through Fish Audio and reads everything
+in it. You can save several voices, switch between them, or remove them
+anytime. Please only clone a voice with that person's permission.
 
 ## Who it's for
 
-Keepsake is designed first for people that most reading apps design last:
-elderly readers, low-vision readers, early readers, and families separated by
-distance — a parent traveling for work, a grandparent in another city, a
-child too young to read the letter themselves. That shapes every decision —
-large touch targets, high contrast, a serif face at 20px, no accounts, no
-clutter, reduced-motion support, and error messages that never blame the
-user ("I couldn't make out the words. Try again with more light, holding
-the page flat.").
+The people most reading apps think about last: elderly readers, low-vision
+readers, kids who can't read yet, and families spread across cities and
+time zones. That's why the buttons are huge, the text is large and high
+contrast, there are no accounts, and the error messages never blame you —
+if a photo is too blurry it just says "Try again with more light, holding
+the page flat."
 
-### Care-design principles
-
-1. **Fail gently.** Nothing crashes, nothing scolds. Every error suggests
-   what to try next.
-2. **Never rush.** Sentence-aware chunking with unhurried pauses between
-   thoughts.
-3. **Huge targets, plain words.** One-tap actions, described in the language
-   of reading, not the language of software.
+A few rules I stuck to while building: fail gently (nothing crashes,
+nothing scolds), never rush (the reading has unhurried pauses between
+thoughts), and use plain words (the app talks about reading, not about
+software).
 
 ## How it works
 
-- **Static site** — vanilla HTML/CSS/JS, no framework, no build step, hosted
-  on GitHub Pages.
-- **Fish Audio TTS** — every piece of text is chunked and spoken via Fish
-  Audio's text-to-speech API (the app's core feature).
-- **Fish Audio voice cloning** — recorded or uploaded samples are converted
-  to WAV client-side and cloned into a private Fish voice model; its
-  reference id then rides along on every TTS request.
-- **Cloudflare Worker proxy** — a small Worker holds the Fish API key as a
-  secret and exposes two routes: `POST /` ({text, voice_id} → MP3) and
-  `POST /clone` (multipart audio → voice id). The key never reaches the
-  browser.
-- **Client-side extraction** — PDFs are read with pdf.js and photos with
-  Tesseract.js, entirely in the browser.
+Plain HTML/CSS/JS, no framework, no build step, hosted on GitHub Pages.
+
+Every piece of text gets chunked into sentence groups and spoken through
+Fish Audio's TTS API. Voice samples are converted to WAV in the browser and
+cloned into a private Fish voice model — after that, the model's reference
+id just rides along on every TTS request.
+
+A small Cloudflare Worker sits in the middle and holds the Fish API key as
+a secret, so the key never touches the browser. It has two routes:
+`POST /` takes `{text, voice_id}` and returns MP3, and `POST /clone` takes
+the audio sample and returns a voice id.
+
+PDFs are read with pdf.js and photos with Tesseract.js, both entirely on
+the device. The extracted text is the only thing that ever gets sent
+anywhere.
 
 ## Privacy
 
-Nothing you read is stored. PDFs and photos never leave the device — only
-the extracted text is sent for speech. There are no accounts and no
-database; your saved voices live in your browser's localStorage. A cloned
-voice model is stored privately with Fish Audio; only you hold its id.
-Clone a voice only with that person's permission.
+Nothing you read is stored. No accounts, no database. Your saved voices
+live in your browser's localStorage, and the cloned voice model sits
+privately in Fish Audio — only you have its id.
 
 ## Running your own
 
-1. Create a Cloudflare Worker, paste `worker.js`, and set a secret named
+1. Create a Cloudflare Worker, paste in `worker.js`, and add a secret named
    `FISH_API_KEY` with your Fish Audio API key.
-2. Put your Worker URL in `js/config.js` as `TTS_ENDPOINT`, and optionally a
-   default Fish voice reference id as `VOICE_ID`.
+2. Put your Worker URL in `js/config.js` as `TTS_ENDPOINT`. You can also set
+   a default Fish voice with `VOICE_ID`.
 3. Serve the folder from any static host.
 
 ## What's next
 
-- Saved letters — a local archive of read items, replayable anytime
-- Shareable keepsakes — export a reading as audio to send over WhatsApp
-- More languages — Fish Audio supports 80+; Keepsake's reading engine
-  already doesn't care what language the text is in
+Saved letters (a local archive you can replay), shareable keepsakes (export
+a reading as audio to send over WhatsApp — voice notes are how my family
+talks anyway), and more languages, since Fish supports 80+ and the reading
+engine doesn't care what language the text is in.
 
 ---
 
-Built for the Fish Audio Week 1 Builder Contest (Realtime TTS Voice Agent).
+Built for the Fish Audio Week 1 Builder Contest.
