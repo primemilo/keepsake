@@ -3,7 +3,13 @@
 Keepsake is a gentle reading companion. It reads letters, documents, bedtime
 stories, pretty much anything  out loud, in the voices of the people you love.
 
-Live: **https://primemilo.github.io/keepsake/**
+## Try it right now
+
+**https://primemilo.github.io/keepsake/** — no signup, no keys, works on your phone.
+
+The one-minute version: open **Family voices**, record about 15 seconds of
+yourself (or upload a voice note someone sent you), then open **Story Time**
+
 
 Why I built it: my sister has a little kid, and when she's at work or away,
 keeping the little guy calm is a real challenge. Sometimes we have to call
