@@ -96,5 +96,3 @@ talks anyway), and more languages, since Fish supports 80+ and the reading
 engine doesn't care what language the text is in.
 
 ---
-
-Built for the Fish Audio Week 1 Builder Contest.
