@@ -135,6 +135,15 @@ const Reader = (() => {
   /* ---------- wiring ---------- */
 
   function init() {
+    // any screen navigation silences playback everywhere
+    document.addEventListener("click", (e) => {
+      const nav = e.target.closest("[data-goto]");
+      if (nav) {
+        generation++;      // retire any reading loop
+        Speech.stop();     // also halts Story Time's queue
+      }
+    });
+
     // tabs
     document.querySelectorAll(".tab-btn").forEach(btn => {
       btn.addEventListener("click", () => {
@@ -187,11 +196,33 @@ const Reader = (() => {
       e.target.value = "";
     });
 
-    // photo handling (OCR arrives in a later step)
-    document.getElementById("photo-input").addEventListener("change", (e) => {
-      if (e.target.files[0]) {
-        document.getElementById("photo-status").textContent =
-          "Photo reading is coming in the next step of the build.";
+    // photo handling — OCR, all client-side, nothing uploaded
+    document.getElementById("photo-input").addEventListener("change", async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const status = document.getElementById("photo-status");
+      status.textContent = "Reading your photo... this takes a moment.";
+      try {
+        const result = await Tesseract.recognize(file, "eng", {
+          logger: (m) => {
+            if (m.status === "recognizing text") {
+              status.textContent =
+                `Reading your photo... ${Math.round(m.progress * 100)}%`;
+            }
+          },
+        });
+        const text = (result.data.text || "").trim();
+        if (text.length >= 20) {
+          status.textContent = "";
+          start(text, "Reading your photo");
+        } else {
+          status.textContent =
+            "I couldn't make out the words. Try again with more light, holding the page flat.";
+        }
+      } catch (err) {
+        console.warn("Keepsake ocr error:", err);
+        status.textContent =
+          "I couldn't read that photo. Perhaps try taking it again.";
       }
       e.target.value = "";
     });

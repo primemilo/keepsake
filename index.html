@@ -3,8 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Keepsake — a gentle reading companion</title>
+<title>Keepsake — letters and stories, read in the voices you love</title>
 <link rel="stylesheet" href="css/style.css">
+<style>
+  /* Family voices — small additions, kept inline to avoid touching style.css */
+  .voice-row { display: flex; align-items: center; gap: 12px; padding: 14px 16px;
+               background: #fff; border: 1px solid #e8ddc9; border-radius: 12px; margin-bottom: 10px; }
+  .voice-row label { font-size: 1.1rem; flex: 1; cursor: pointer; }
+  .voice-row input[type="radio"] { width: 22px; height: 22px; cursor: pointer; }
+  .voice-del { background: none; border: none; color: #a0522d; font-size: 1rem;
+               cursor: pointer; padding: 6px 10px; }
+  .record-timer { font-size: 1.6rem; font-weight: bold; text-align: center; margin: 10px 0; }
+  #voice-name { width: 100%; box-sizing: border-box; font-family: inherit; font-size: 1.1rem;
+                padding: 12px; border: 1px solid #e8ddc9; border-radius: 10px; margin: 10px 0; }
+  #voice-preview { width: 100%; margin: 10px 0; }
+  .consent-note { font-size: 0.95rem; color: #8a7a5c; border-left: 3px solid #d9a441;
+                  padding-left: 12px; margin: 14px 0; }
+</style>
 </head>
 <body>
 
@@ -13,6 +28,8 @@
   <header class="home-header">
     <h1 class="brand">Keepsake</h1>
     <p class="tagline">A gentle reading companion</p>
+    <p class="tagline" style="max-width: 34rem; margin: 6px auto 0;">When you can't be there to read
+      to them, Keepsake can — bedtime stories, letters, anything — in your voice.</p>
   </header>
 
   <nav class="mode-grid" aria-label="Choose an activity">
@@ -26,6 +43,12 @@
       <span class="mode-icon" aria-hidden="true">&#9788;</span>
       <span class="mode-title">Story Time</span>
       <span class="mode-desc">Listen to a story from the library</span>
+    </button>
+
+    <button class="mode-card" data-goto="screen-voices">
+      <span class="mode-icon" aria-hidden="true">&#9829;</span>
+      <span class="mode-title">Family voices</span>
+      <span class="mode-desc">Record a loved one's voice so Keepsake can read in it</span>
     </button>
   </nav>
 </main>
@@ -94,10 +117,54 @@
   </section>
 </main>
 
+<!-- ============ FAMILY VOICES ============ -->
+<main id="screen-voices" class="screen">
+  <header class="screen-header">
+    <button class="home-btn" data-goto="screen-home">&#8962; Home</button>
+    <h2>Family voices</h2>
+  </header>
+
+  <div class="input-panel">
+    <p class="gentle-note">Record about 20 seconds of someone's voice, and Keepsake
+      can read letters and stories aloud in that voice.</p>
+    <p class="consent-note">Only record a voice with that person's permission.</p>
+
+    <div id="voice-recorder">
+      <button id="btn-record" class="big-btn primary">Start recording</button>
+      <p class="record-timer hidden" id="record-timer">0s</p>
+      <p class="gentle-note" id="record-hint">Find a quiet spot, hold the device close,
+        and speak naturally — a favorite memory or a short story works well.
+        Aim for 15 to 30 seconds.</p>
+      <p class="gentle-note">Far away? They can send a voice note, and you can add it here.</p>
+      <input type="file" id="voice-file" accept="audio/*" class="file-hidden">
+      <button id="btn-upload-voice" class="big-btn">Upload a voice recording</button>
+    </div>
+
+    <div id="voice-review" class="hidden">
+      <audio id="voice-preview" controls></audio>
+      <input type="text" id="voice-name" placeholder="Whose voice is this? (e.g. Mum)" maxlength="30">
+      <button id="btn-save-voice" class="big-btn primary">Save this voice</button>
+      <button id="btn-discard-voice" class="big-btn">Record again</button>
+    </div>
+
+    <p id="voice-status" class="gentle-note"></p>
+
+    <h3 style="margin-top: 28px;">Who should read?</h3>
+    <div id="voice-list"></div>
+  </div>
+</main>
+
+<footer style="text-align: center; padding: 28px 16px 36px; color: #8a7a5c; font-size: 0.95rem;">
+  <p>For the mother away on a trip, the grandchild in another city, the family spread
+    across time zones. Nothing you read is stored; your words stay yours.</p>
+</footer>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.1.0/tesseract.min.js"></script>
 <script src="js/config.js"></script>
 <script src="js/speech.js"></script>
 <script src="js/reader.js"></script>
+<script src="js/voices.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>
