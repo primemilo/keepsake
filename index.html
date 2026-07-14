@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Keepsake — letters and stories, read in the voices you love</title>
+<title>Keepsake: letters and stories, read in the voices you love</title>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/style.css">
 <style>
-  /* Family voices — small additions, kept inline to avoid touching style.css */
+  /* Family voices – small additions, kept inline to avoid touching style.css */
   .voice-row { display: flex; align-items: center; gap: 12px; padding: 14px 16px;
                background: #fff; border: 1px solid #e8ddc9; border-radius: 12px; margin-bottom: 10px; }
   .voice-row label { font-size: 1.1rem; flex: 1; cursor: pointer; }
@@ -18,7 +18,7 @@
   #voice-name { width: 100%; box-sizing: border-box; font-family: inherit; font-size: 1.1rem;
                 padding: 12px; border: 1px solid #e8ddc9; border-radius: 10px; margin: 10px 0; }
   #voice-preview { width: 100%; margin: 10px 0; }
-  .consent-note { font-size: 0.95rem; color: #8a7a5c; border-left: 3px solid #d9a441;
+  .consent-note { font-size: 0.95rem; color: #705a3e; border-left: 3px solid #d9a441;
                   padding-left: 12px; margin: 14px 0; }
 </style>
 </head>
@@ -30,23 +30,23 @@
     <h1 class="brand">Keepsake</h1>
     <p class="tagline">A gentle reading companion</p>
     <p class="tagline" style="max-width: 34rem; margin: 6px auto 0;">When you can't be there to read
-      to them, Keepsake can — bedtime stories, letters, anything — in your voice.</p>
+      to them, Keepsake can – bedtime stories, letters, anything – in your voice.</p>
   </header>
 
   <nav class="mode-grid" aria-label="Choose an activity">
-    <button class="mode-card" data-goto="screen-read">
+    <button class="mode-card" data-goto="screen-read" type="button">
       <span class="mode-icon" aria-hidden="true">&#9998;</span>
       <span class="mode-title">Read to me</span>
       <span class="mode-desc">Paste text, open a document, or snap a photo of a page</span>
     </button>
 
-    <button class="mode-card" data-goto="screen-stories">
+    <button class="mode-card" data-goto="screen-stories" type="button">
       <span class="mode-icon" aria-hidden="true">&#9788;</span>
       <span class="mode-title">Story Time</span>
       <span class="mode-desc">Listen to a story from the library</span>
     </button>
 
-    <button class="mode-card" data-goto="screen-voices">
+    <button class="mode-card" data-goto="screen-voices" type="button">
       <span class="mode-icon" aria-hidden="true">&#9829;</span>
       <span class="mode-title">Family voices</span>
       <span class="mode-desc">Record a loved one's voice so Keepsake can read in it</span>
@@ -57,34 +57,34 @@
 <!-- ============ READ TO ME ============ -->
 <main id="screen-read" class="screen">
   <header class="screen-header">
-    <button class="home-btn" data-goto="screen-home">&#8962; Home</button>
+    <button class="home-btn" data-goto="screen-home" type="button" aria-label="Home">&#8962; Home</button>
     <h2>Read to me</h2>
   </header>
 
   <div id="read-input" class="input-panel">
     <div class="input-tabs" role="tablist">
-      <button class="tab-btn active" data-tab="tab-paste">Paste text</button>
-      <button class="tab-btn" data-tab="tab-file">Open a file</button>
-      <button class="tab-btn" data-tab="tab-photo">Snap a photo</button>
+      <button class="tab-btn active" data-tab="tab-paste" type="button">Paste text</button>
+      <button class="tab-btn" data-tab="tab-file" type="button">Open a file</button>
+      <button class="tab-btn" data-tab="tab-photo" type="button">Snap a photo</button>
     </div>
 
     <section id="tab-paste" class="tab-panel active">
       <textarea id="paste-box" rows="7"
-        placeholder="Paste or type anything here — a letter, an article, a recipe..."></textarea>
-      <button id="btn-read-paste" class="big-btn primary">Read it to me</button>
+        placeholder="Paste or type anything here – a letter, an article, a recipe..."></textarea>
+      <button id="btn-read-paste" class="big-btn primary" type="button">Read it to me</button>
     </section>
 
     <section id="tab-file" class="tab-panel">
       <p class="gentle-note">Open a PDF or text file and Keepsake will read it aloud.</p>
       <input type="file" id="file-input" accept=".pdf,.txt" class="file-hidden">
-      <button id="btn-choose-file" class="big-btn primary">Choose a file</button>
+      <button id="btn-choose-file" class="big-btn primary" type="button">Choose a file</button>
       <p id="file-status" class="gentle-note"></p>
     </section>
 
     <section id="tab-photo" class="tab-panel">
-      <p class="gentle-note">Take a photo of a printed page — a letter, a label, a newspaper — and Keepsake will read it out.</p>
+      <p class="gentle-note">Take a photo of a printed page (a letter, a label, a newspaper) and Keepsake will read it out.</p>
       <input type="file" id="photo-input" accept="image/*" capture="environment" class="file-hidden">
-      <button id="btn-choose-photo" class="big-btn primary">Take or choose a photo</button>
+      <button id="btn-choose-photo" class="big-btn primary" type="button">Take or choose a photo</button>
       <p id="photo-status" class="gentle-note"></p>
     </section>
   </div>
@@ -94,9 +94,9 @@
     <h3 id="reader-title">Reading</h3>
     <p id="reader-text" class="player-text"></p>
     <div class="player-controls">
-      <button id="btn-reader-pause" class="big-btn primary">Pause</button>
-      <button id="btn-reader-restart" class="big-btn">Start over</button>
-      <button id="btn-reader-new" class="big-btn">Read something else</button>
+      <button id="btn-reader-pause" class="big-btn primary" type="button">Pause</button>
+      <button id="btn-reader-restart" class="big-btn" type="button">Start over</button>
+      <button id="btn-reader-new" class="big-btn" type="button">Read something else</button>
     </div>
   </section>
 </main>
@@ -104,7 +104,7 @@
 <!-- ============ STORY TIME ============ -->
 <main id="screen-stories" class="screen">
   <header class="screen-header">
-    <button class="home-btn" data-goto="screen-home">&#8962; Home</button>
+    <button class="home-btn" data-goto="screen-home" type="button" aria-label="Home">&#8962; Home</button>
     <h2>Story Time</h2>
   </header>
   <div id="story-list" class="card-list"></div>
@@ -112,8 +112,8 @@
     <h3 id="player-title"></h3>
     <p id="player-paragraph" class="player-text"></p>
     <div class="player-controls">
-      <button id="btn-continue" class="big-btn primary">Keep going</button>
-      <button id="btn-rest" class="big-btn">Rest for now</button>
+      <button id="btn-continue" class="big-btn primary" type="button">Keep going</button>
+      <button id="btn-rest" class="big-btn" type="button">Rest for now</button>
     </div>
   </section>
 </main>
@@ -121,7 +121,7 @@
 <!-- ============ FAMILY VOICES ============ -->
 <main id="screen-voices" class="screen">
   <header class="screen-header">
-    <button class="home-btn" data-goto="screen-home">&#8962; Home</button>
+    <button class="home-btn" data-goto="screen-home" type="button" aria-label="Home">&#8962; Home</button>
     <h2>Family voices</h2>
   </header>
 
@@ -131,21 +131,21 @@
     <p class="consent-note">Only record a voice with that person's permission.</p>
 
     <div id="voice-recorder">
-      <button id="btn-record" class="big-btn primary">Start recording</button>
+      <button id="btn-record" class="big-btn primary" type="button">Start recording</button>
       <p class="record-timer hidden" id="record-timer">0s</p>
       <p class="gentle-note" id="record-hint">Find a quiet spot, hold the device close,
-        and speak naturally — a favorite memory or a short story works well.
+        and speak naturally – a favorite memory or a short story works well.
         Aim for 15 to 30 seconds.</p>
       <p class="gentle-note">Far away? They can send a voice note, and you can add it here.</p>
       <input type="file" id="voice-file" accept="audio/*" class="file-hidden">
-      <button id="btn-upload-voice" class="big-btn">Upload a voice recording</button>
+      <button id="btn-upload-voice" class="big-btn" type="button">Upload a voice recording</button>
     </div>
 
     <div id="voice-review" class="hidden">
       <audio id="voice-preview" controls></audio>
       <input type="text" id="voice-name" placeholder="Whose voice is this? (e.g. Mum)" maxlength="30">
-      <button id="btn-save-voice" class="big-btn primary">Save this voice</button>
-      <button id="btn-discard-voice" class="big-btn">Record again</button>
+      <button id="btn-save-voice" class="big-btn primary" type="button">Save this voice</button>
+      <button id="btn-discard-voice" class="big-btn" type="button">Record again</button>
     </div>
 
     <p id="voice-status" class="gentle-note"></p>
@@ -155,7 +155,7 @@
   </div>
 </main>
 
-<footer style="text-align: center; padding: 28px 16px 36px; color: #8a7a5c; font-size: 0.95rem;">
+<footer style="text-align: center; padding: 28px 16px 36px; color: #705a3e; font-size: 0.95rem;">
   <p>For the mother away on a trip, the grandchild in another city, the family spread
     across time zones. Nothing you read is stored; your words stay yours.</p>
 </footer>
