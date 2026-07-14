@@ -1,8 +1,4 @@
-/* ============================================
-   Keepsake — app logic
-   Navigation + Story Time library
-   ============================================ */
-
+/* Keepsake — app logic */
 const STORIES = [
   {
     id: "tortoise-hare",
@@ -24,21 +20,24 @@ const STORIES = [
   },
 ];
 
-/* ---------- navigation ---------- */
+window.STORIES = STORIES;
+
 function goTo(screenId) {
   Speech.stop();
   document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
   document.getElementById(screenId).classList.add("active");
   if (screenId === "screen-stories") renderStoryList();
   if (screenId === "screen-read") Reader.showInput();
+  if (screenId === "screen-library") Library.renderList();
 }
+
+window.goTo = goTo;
 
 document.addEventListener("click", (e) => {
   const nav = e.target.closest("[data-goto]");
   if (nav) goTo(nav.dataset.goto);
 });
 
-/* ---------- Story Time (uses the Reader engine) ---------- */
 function renderStoryList() {
   const list = document.getElementById("story-list");
   list.innerHTML = "";
@@ -57,3 +56,5 @@ function renderStoryList() {
 
 /* ---------- boot ---------- */
 Reader.init();
+Library.init();
+Voices.updateVoiceSelectorLabels();

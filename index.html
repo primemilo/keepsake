@@ -7,7 +7,7 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/style.css">
 <style>
-  /* Family voices – small additions, kept inline to avoid touching style.css */
+  /* Family voices – small additions */
   .voice-row { display: flex; align-items: center; gap: 12px; padding: 14px 16px;
                background: #fff; border: 1px solid #e8ddc9; border-radius: 12px; margin-bottom: 10px; }
   .voice-row label { font-size: 1.1rem; flex: 1; cursor: pointer; }
@@ -20,6 +20,49 @@
   #voice-preview { width: 100%; margin: 10px 0; }
   .consent-note { font-size: 0.95rem; color: #705a3e; border-left: 3px solid #d9a441;
                   padding-left: 12px; margin: 14px 0; }
+
+  /* Voice command mic button */
+  .voice-command-btn {
+    position: fixed; bottom: 24px; right: 24px;
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: var(--accent); color: #fff;
+    font-size: 1.8rem; border: none; cursor: pointer;
+    z-index: 999; box-shadow: 0 4px 12px rgba(120,90,30,0.3);
+    transition: background 0.2s;
+  }
+  .voice-command-btn:hover { background: var(--accent-strong); }
+  .voice-command-btn.listening { background: #e04f2f; animation: pulse 1.4s infinite; }
+
+  /* Voice selector dropdown */
+  .voice-selector { position: relative; display: inline-block; }
+  .voice-selector-btn {
+    background: var(--bg-card); border: 2px solid var(--line); border-radius: 12px;
+    font-family: inherit; font-size: 1rem; color: var(--ink); padding: 0.6rem 1rem; cursor: pointer;
+    white-space: nowrap;
+  }
+  .voice-selector-btn:hover { border-color: var(--accent); }
+  .voice-dropdown {
+    position: absolute; top: 100%; right: 0; margin-top: 4px;
+    background: #fff; border: 2px solid var(--line); border-radius: 12px;
+    box-shadow: var(--shadow); min-width: 220px; z-index: 10; display: none;
+  }
+  .voice-dropdown.show { display: block; }
+  .voice-dropdown-item {
+    padding: 12px 16px; cursor: pointer; border-bottom: 1px solid #f2e8d5;
+    font-size: 1rem;
+  }
+  .voice-dropdown-item:last-child { border-bottom: none; }
+  .voice-dropdown-item:hover { background: #fbf1dc; }
+
+  /* Library add form */
+  .library-form { display: grid; gap: 0.7rem; margin-top: 1rem; }
+  .library-form label { font-size: 1rem; color: var(--ink-soft); }
+  .library-form input, .library-form textarea, .library-form select {
+    font-family: inherit; font-size: 1.1rem; padding: 0.8rem 1rem;
+    border: 2px solid var(--line); border-radius: 12px; width: 100%;
+    box-sizing: border-box;
+  }
 </style>
 </head>
 <body>
@@ -46,12 +89,16 @@
       <span class="mode-desc">Listen to a story from the library</span>
     </button>
 
-    <button class="mode-card" data-goto="screen-voices" type="button">
+    <button class="mode-card" data-goto="screen-library" type="button">
       <span class="mode-icon" aria-hidden="true">&#9829;</span>
-      <span class="mode-title">Family voices</span>
-      <span class="mode-desc">Record a loved one's voice so Keepsake can read in it</span>
+      <span class="mode-title">Family Library</span>
+      <span class="mode-desc">Messages and stories saved by your loved ones</span>
     </button>
   </nav>
+
+  <footer class="home-footer">
+    <button class="quiet-link" data-goto="screen-voices" type="button">Manage family voices</button>
+  </footer>
 </main>
 
 <!-- ============ READ TO ME ============ -->
@@ -59,6 +106,10 @@
   <header class="screen-header">
     <button class="home-btn" data-goto="screen-home" type="button" aria-label="Home">&#8962; Home</button>
     <h2>Read to me</h2>
+    <div class="voice-selector" id="voice-selector-read">
+      <button class="voice-selector-btn" id="voice-selector-read-btn" type="button">Voice: Keepsake</button>
+      <div class="voice-dropdown" id="voice-dropdown-read"></div>
+    </div>
   </header>
 
   <div id="read-input" class="input-panel">
@@ -106,6 +157,10 @@
   <header class="screen-header">
     <button class="home-btn" data-goto="screen-home" type="button" aria-label="Home">&#8962; Home</button>
     <h2>Story Time</h2>
+    <div class="voice-selector" id="voice-selector-stories">
+      <button class="voice-selector-btn" id="voice-selector-stories-btn" type="button">Voice: Keepsake</button>
+      <div class="voice-dropdown" id="voice-dropdown-stories"></div>
+    </div>
   </header>
   <div id="story-list" class="card-list"></div>
   <section id="story-player" class="player hidden" aria-live="polite">
@@ -116,6 +171,38 @@
       <button id="btn-rest" class="big-btn" type="button">Rest for now</button>
     </div>
   </section>
+</main>
+
+<!-- ============ FAMILY LIBRARY ============ -->
+<main id="screen-library" class="screen">
+  <header class="screen-header">
+    <button class="home-btn" data-goto="screen-home" type="button" aria-label="Home">&#8962; Home</button>
+    <h2>Family Library</h2>
+    <div class="voice-selector" id="voice-selector-library">
+      <button class="voice-selector-btn" id="voice-selector-library-btn" type="button">Voice: Keepsake</button>
+      <div class="voice-dropdown" id="voice-dropdown-library"></div>
+    </div>
+  </header>
+
+  <div class="input-panel">
+    <p class="gentle-note">Messages and stories left by your family, ready to be read in their voices.</p>
+    <div id="library-list" class="card-list"></div>
+    <button id="btn-add-library-item" class="big-btn primary" type="button">Add something new</button>
+
+    <!-- Hidden add form -->
+    <div id="library-add-form" class="library-form hidden">
+      <label for="library-title">Title (e.g. Dad's bedtime message)</label>
+      <input type="text" id="library-title" maxlength="50" placeholder="Title">
+      <label for="library-text">Message or story</label>
+      <textarea id="library-text" rows="5" placeholder="Write or paste the text..."></textarea>
+      <label for="library-voice">Read this in whose voice?</label>
+      <select id="library-voice"></select>
+      <div style="display: flex; gap: 1rem;">
+        <button id="btn-save-library" class="big-btn primary" type="button">Save</button>
+        <button id="btn-cancel-library" class="big-btn" type="button">Cancel</button>
+      </div>
+    </div>
+  </div>
 </main>
 
 <!-- ============ FAMILY VOICES ============ -->
@@ -160,12 +247,17 @@
     across time zones. Nothing you read is stored; your words stay yours.</p>
 </footer>
 
+<!-- Voice command mic button -->
+<button id="voice-command-btn" class="voice-command-btn" type="button" aria-label="Voice command">🎤</button>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.1.0/tesseract.min.js"></script>
 <script src="js/config.js"></script>
 <script src="js/speech.js"></script>
 <script src="js/reader.js"></script>
 <script src="js/voices.js"></script>
+<script src="js/library.js"></script>
+<script src="js/voice-commands.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

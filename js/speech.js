@@ -1,19 +1,13 @@
-/* ============================================
-   Keepsake — speech engine
-   Sends text to the TTS proxy, plays audio
-   sequentially with gentle pacing.
-   ============================================ */
-
+/* Keepsake — speech engine */
 const Speech = (() => {
   let currentAudio = null;
-  let stopCurrent = null;   // settles a pending playUrl promise when stop() is called
-  let session = 0;          // bumped by stop(); anything started before is stale
-  let controller = null;    // aborts an in-flight TTS fetch
+  let stopCurrent = null;
+  let session = 0;
+  let controller = null;
   let queue = [];
   let playing = false;
   let onQueueDone = null;
 
-  /** Fetch spoken audio for one piece of text. Returns an object URL. */
   async function fetchAudio(text, signal) {
     const resp = await fetch(CONFIG.TTS_ENDPOINT, {
       method: "POST",
@@ -26,11 +20,10 @@ const Speech = (() => {
     return URL.createObjectURL(blob);
   }
 
-  /** Play a single object URL; resolves when the audio finishes OR stop() is called. */
   function playUrl(url) {
     return new Promise((resolve, reject) => {
       const cleanup = () => { URL.revokeObjectURL(url); stopCurrent = null; };
-      stopCurrent = () => { cleanup(); resolve(); };   // stop() ends us gently
+      stopCurrent = () => { cleanup(); resolve(); };
       currentAudio = new Audio(url);
       currentAudio.onended = () => { cleanup(); resolve(); };
       currentAudio.onerror = () => { cleanup(); reject(new Error("audio playback failed")); };
@@ -38,7 +31,6 @@ const Speech = (() => {
     });
   }
 
-  /** Speak one piece of text (fetch + play). Exits silently if stopped mid-fetch. */
   async function say(text) {
     const mySession = session;
     controller = new AbortController();
@@ -46,13 +38,10 @@ const Speech = (() => {
     try {
       url = await fetchAudio(text, controller.signal);
     } catch (e) {
-      if (e.name === "AbortError") return;   // stopped while fetching — exit quietly
+      if (e.name === "AbortError") return;
       throw e;
     }
-    if (mySession !== session) {             // stopped while fetching (belt and braces)
-      URL.revokeObjectURL(url);
-      return;
-    }
+    if (mySession !== session) { URL.revokeObjectURL(url); return; }
     document.body.classList.add("speaking");
     try {
       await playUrl(url);
@@ -61,9 +50,8 @@ const Speech = (() => {
     }
   }
 
-  /** Queue several texts to be spoken in order with a pause between. */
   async function sayQueue(texts, betweenMs) {
-    stop(); // clear anything already playing
+    stop();
     queue = texts.slice();
     playing = true;
     while (queue.length > 0 && playing) {
@@ -72,7 +60,7 @@ const Speech = (() => {
         await say(next);
       } catch (e) {
         console.warn("Keepsake speech error:", e);
-        break; // fail gently, never crash the experience
+        break;
       }
       if (queue.length > 0 && playing) {
         await new Promise(r => setTimeout(r, betweenMs || CONFIG.PARAGRAPH_PAUSE));
@@ -82,17 +70,13 @@ const Speech = (() => {
     if (onQueueDone) { const cb = onQueueDone; onQueueDone = null; cb(); }
   }
 
-  /** Stop all speech immediately — including a fetch still in flight. */
   function stop() {
-    session++;                                  // retire anything already started
+    session++;
     if (controller) { controller.abort(); controller = null; }
     playing = false;
     queue = [];
-    if (currentAudio) {
-      currentAudio.pause();
-      currentAudio = null;
-    }
-    if (stopCurrent) stopCurrent();             // settle any hung playUrl promise
+    if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+    if (stopCurrent) stopCurrent();
     document.body.classList.remove("speaking");
   }
 
