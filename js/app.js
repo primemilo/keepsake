@@ -54,7 +54,53 @@ function renderStoryList() {
   });
 }
 
+/* ---------- dark mode toggle ---------- */
+function initTheme() {
+  const toggle = document.getElementById("theme-toggle");
+  const stored = localStorage.getItem("keepsake-theme");
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+  if (stored === "dark" || (!stored && prefersDark)) {
+    document.documentElement.setAttribute("data-theme", "dark");
+    toggle.textContent = "☀️";
+  } else {
+    document.documentElement.removeAttribute("data-theme");
+    toggle.textContent = "🌙";
+  }
+
+  toggle.addEventListener("click", () => {
+    if (document.documentElement.getAttribute("data-theme") === "dark") {
+      document.documentElement.removeAttribute("data-theme");
+      localStorage.setItem("keepsake-theme", "light");
+      toggle.textContent = "🌙";
+    } else {
+      document.documentElement.setAttribute("data-theme", "dark");
+      localStorage.setItem("keepsake-theme", "dark");
+      toggle.textContent = "☀️";
+    }
+  });
+}
+
+/* ---------- onboarding ---------- */
+function initOnboarding() {
+  const seen = localStorage.getItem("keepsake-onboarding");
+  if (seen) return;
+
+  const overlay = document.getElementById("onboarding-overlay");
+  overlay.classList.remove("hidden");
+
+  const close = () => {
+    overlay.classList.add("hidden");
+    localStorage.setItem("keepsake-onboarding", "true");
+  };
+
+  document.getElementById("onboarding-done").addEventListener("click", close);
+  document.getElementById("onboarding-close").addEventListener("click", close);
+}
+
 /* ---------- boot ---------- */
+initTheme();
+initOnboarding();
 Reader.init();
 Library.init();
 Voices.updateVoiceSelectorLabels();

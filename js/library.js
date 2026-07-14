@@ -38,15 +38,36 @@ const Library = (() => {
     }
     items.forEach(item => {
       const voice = Voices.getVoices().find(v => v.id === item.voiceId) || { name: "Keepsake" };
-      const card = document.createElement("div");
+
+      const wrapper = document.createElement("div");
+      wrapper.style.display = "flex";
+      wrapper.style.alignItems = "center";
+      wrapper.style.gap = "0.5rem";
+
+      const card = document.createElement("button");
       card.className = "list-card";
-      card.style.cursor = "pointer";
+      card.style.flex = "1";
       card.innerHTML = `${item.title}<span class="card-sub">In ${voice.name}'s voice</span>`;
       card.addEventListener("click", () => {
         goTo("screen-read");
         Reader.start(item.text, item.title);
       });
-      listEl.appendChild(card);
+
+      const delBtn = document.createElement("button");
+      delBtn.className = "library-delete";
+      delBtn.innerHTML = "&#10005;"; // X symbol
+      delBtn.setAttribute("aria-label", "Delete " + item.title);
+      delBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (confirm("Are you sure you want to delete this item? This cannot be undone.")) {
+          removeItem(item.id);
+          renderList();
+        }
+      });
+
+      wrapper.appendChild(card);
+      wrapper.appendChild(delBtn);
+      listEl.appendChild(wrapper);
     });
   }
 

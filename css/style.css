@@ -1,9 +1,11 @@
 /* ============================================
    Keepsake design system
    High contrast, large type, elderly-friendly
+   Light & dark themes
    ============================================ */
 
 :root {
+  /* Light theme (default) */
   --bg: #faf6ee;
   --bg-card: #ffffff;
   --ink: #3b3128;
@@ -12,8 +14,33 @@
   --accent-strong: #8c5414;
   --accent-deep: #a56f1d;
   --line: #e8dfd0;
+  --line-strong: #d4c5a9;
   --radius: 18px;
   --shadow: 0 2px 10px rgba(59, 49, 40, 0.08);
+  --shadow-strong: 0 4px 12px rgba(59, 49, 40, 0.12);
+  --bg-gradient: radial-gradient(ellipse at 50% -10%, #fdf8ec 0%, #faf3e3 55%, #f6edd8 100%);
+  --icon-bg: #fbf1dc;
+  --icon-border: #eeddb8;
+  --card-border: #eadfc8;
+}
+
+/* Dark theme */
+[data-theme="dark"] {
+  --bg: #2b241a;
+  --bg-card: #3d3428;
+  --ink: #f0e4d0;
+  --ink-soft: #c4b59a;
+  --accent: #e0a64a;
+  --accent-strong: #f5c16c;
+  --accent-deep: #c98a2d;
+  --line: #554b3a;
+  --line-strong: #6b5f4a;
+  --shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+  --shadow-strong: 0 4px 16px rgba(0, 0, 0, 0.35);
+  --bg-gradient: radial-gradient(ellipse at 50% -10%, #3d3428 0%, #2b241a 100%);
+  --icon-bg: #4a3d2e;
+  --icon-border: #5c4e3a;
+  --card-border: #4a3d2e;
 }
 
 * {
@@ -31,9 +58,9 @@ body {
   color: var(--ink);
   line-height: 1.65;
   min-height: 100vh;
-  background:
-    radial-gradient(ellipse at 50% -10%, #fdf8ec 0%, #faf3e3 55%, #f6edd8 100%)
-    fixed;
+  background: var(--bg-gradient);
+  background-attachment: fixed;
+  transition: background 0.3s, color 0.3s;
 }
 
 /* ---------- screen visibility ---------- */
@@ -81,17 +108,15 @@ body {
 
 .mode-card {
   background: var(--bg-card);
-  border: 1px solid #eadfc8;
+  border: 1px solid var(--card-border);
   border-radius: var(--radius);
-  box-shadow:
-    0 2px 4px rgba(120, 90, 30, 0.05),
-    0 10px 24px rgba(120, 90, 30, 0.07);
+  box-shadow: var(--shadow);
   padding: 2rem 1.5rem;
   text-align: center;
   cursor: pointer;
   font-family: inherit;
   color: inherit;
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.2s;
   min-height: 190px;
   display: flex;
   flex-direction: column;
@@ -103,9 +128,7 @@ body {
 .mode-card:hover {
   border-color: var(--accent);
   transform: translateY(-3px);
-  box-shadow:
-    0 4px 8px rgba(120, 90, 30, 0.08),
-    0 16px 32px rgba(120, 90, 30, 0.11);
+  box-shadow: var(--shadow-strong);
 }
 
 .mode-card:focus-visible {
@@ -113,8 +136,7 @@ body {
   outline: none;
   transform: translateY(-3px);
   box-shadow:
-    0 4px 8px rgba(120, 90, 30, 0.08),
-    0 16px 32px rgba(120, 90, 30, 0.11),
+    var(--shadow-strong),
     0 0 0 3px var(--bg),
     0 0 0 5px var(--accent);
 }
@@ -128,8 +150,8 @@ body {
   width: 58px;
   height: 58px;
   border-radius: 50%;
-  background: #fbf1dc;
-  border: 1px solid #eeddb8;
+  background: var(--icon-bg);
+  border: 1px solid var(--icon-border);
 }
 
 .mode-title {
@@ -236,15 +258,28 @@ body {
   margin-top: 0.25rem;
 }
 
+/* Library delete button */
+.library-delete {
+  background: none;
+  border: none;
+  color: var(--ink-soft);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0 0.5rem;
+  line-height: 1;
+  transition: color 0.2s;
+}
+.library-delete:hover {
+  color: #c44;
+}
+
 /* ---------- player ---------- */
 .player {
   margin-top: 2rem;
   background: var(--bg-card);
   border: 2px solid var(--line);
   border-radius: var(--radius);
-  box-shadow:
-    0 2px 4px rgba(120, 90, 30, 0.05),
-    0 10px 24px rgba(120, 90, 30, 0.06);
+  box-shadow: var(--shadow);
   padding: 2rem 1.7rem;
   transition: background-color 0.2s ease, border-color 0.2s ease;
 }
@@ -279,6 +314,7 @@ body {
   border: 2px solid var(--line);
   border-radius: 14px;
   cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
 }
 
 .big-btn:hover {
@@ -299,18 +335,21 @@ body {
 
 .big-btn.primary:hover,
 .big-btn.primary:focus-visible {
-  background: #6e3f0c;
-  border-color: #6e3f0c;
+  background: var(--accent-deep);
+  border-color: var(--accent-deep);
 }
 
 .big-btn.primary:focus-visible {
-  box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px var(--accent-strong);
+  box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px var(--accent);
 }
 
 /* ---------- speaking state ---------- */
 .speaking .player {
   background: #fffaf2;
   border-color: var(--accent);
+}
+[data-theme="dark"] .speaking .player {
+  background: #4a3d2e;
 }
 
 .speaking .player-text::after {
@@ -324,21 +363,7 @@ body {
   50%      { opacity: 1; }
 }
 
-/* ---------- memories ---------- */
-.memory-card {
-  background: var(--bg-card);
-  border: 2px solid var(--line);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 2rem 1.7rem;
-}
-
-.memory-card h3 {
-  font-size: 1.5rem;
-  color: var(--accent-deep);
-  margin-bottom: 1rem;
-}
-
+/* ---------- general ---------- */
 .gentle-note {
   color: var(--ink-soft);
   font-size: 1.05rem;
@@ -346,49 +371,11 @@ body {
   margin-bottom: 1.5rem;
 }
 
-/* ---------- caregiver form ---------- */
-.setup-form {
-  display: grid;
-  gap: 0.7rem;
-  margin-bottom: 2.5rem;
-}
-
-.setup-form label {
-  font-size: 1rem;
-  color: var(--ink-soft);
-}
-
-.setup-form input,
-.setup-form textarea {
-  font-family: inherit;
-  font-size: 1.1rem;
-  color: var(--ink);
-  background: var(--bg-card);
-  border: 2px solid var(--line);
-  border-radius: 12px;
-  padding: 0.8rem 1rem;
-  width: 100%;
-}
-
-.setup-form input:focus,
-.setup-form textarea:focus {
-  border-color: var(--accent);
-  outline: none;
-  box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px var(--accent);
-}
-
-.setup-form .big-btn {
-  margin-top: 0.5rem;
-}
-
-/* ---------- read-to-me input panel ---------- */
 .input-panel {
   background: var(--bg-card);
   border: 2px solid var(--line);
   border-radius: var(--radius);
-  box-shadow:
-    0 2px 4px rgba(120, 90, 30, 0.05),
-    0 10px 24px rgba(120, 90, 30, 0.06);
+  box-shadow: var(--shadow);
   padding: 1.5rem;
 }
 
@@ -450,6 +437,273 @@ body {
 
 .file-hidden {
   display: none;
+}
+
+/* ---------- consent note ---------- */
+.consent-note {
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+  border-left: 3px solid var(--accent);
+  padding-left: 12px;
+  margin: 14px 0;
+}
+
+/* ---------- voice selector ---------- */
+.voice-selector {
+  position: relative;
+  display: inline-block;
+  margin-left: auto;
+}
+
+.voice-selector-btn {
+  background: var(--bg-card);
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--ink);
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.voice-selector-btn:hover {
+  border-color: var(--accent);
+}
+
+.voice-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  background: var(--bg-card);
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  box-shadow: var(--shadow-strong);
+  min-width: 220px;
+  z-index: 10;
+  display: none;
+}
+.voice-dropdown.show {
+  display: block;
+}
+
+.voice-dropdown-item {
+  padding: 12px 16px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--line);
+  font-size: 1rem;
+}
+.voice-dropdown-item:last-child {
+  border-bottom: none;
+}
+.voice-dropdown-item:hover {
+  background: var(--icon-bg);
+}
+
+/* ---------- voice recording / list ---------- */
+.voice-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  margin-bottom: 10px;
+}
+.voice-row label {
+  font-size: 1.1rem;
+  flex: 1;
+  cursor: pointer;
+}
+.voice-row input[type="radio"] {
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+}
+.voice-del {
+  background: none;
+  border: none;
+  color: #a0522d;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 6px 10px;
+}
+
+.record-timer {
+  font-size: 1.6rem;
+  font-weight: bold;
+  text-align: center;
+  margin: 10px 0;
+}
+#voice-name {
+  width: 100%;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 1.1rem;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  margin: 10px 0;
+  background: var(--bg);
+  color: var(--ink);
+}
+#voice-preview {
+  width: 100%;
+  margin: 10px 0;
+}
+
+/* ---------- library form ---------- */
+.library-form {
+  display: grid;
+  gap: 0.7rem;
+  margin-top: 1rem;
+}
+.library-form label {
+  font-size: 1rem;
+  color: var(--ink-soft);
+}
+.library-form input,
+.library-form textarea,
+.library-form select {
+  font-family: inherit;
+  font-size: 1.1rem;
+  padding: 0.8rem 1rem;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--bg);
+  color: var(--ink);
+}
+
+/* ---------- theme toggle ---------- */
+.theme-toggle {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 2px solid var(--line);
+  font-size: 1.3rem;
+  cursor: pointer;
+  z-index: 1000;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+.theme-toggle:hover {
+  background: var(--icon-bg);
+}
+
+/* ---------- voice command mic button ---------- */
+.voice-command-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-size: 1.8rem;
+  border: none;
+  cursor: pointer;
+  z-index: 999;
+  box-shadow: 0 4px 12px rgba(120, 90, 30, 0.3);
+  transition: background 0.2s;
+}
+.voice-command-btn:hover {
+  background: var(--accent-strong);
+}
+.voice-command-btn.listening {
+  background: #e04f2f;
+  animation: pulse 1.4s infinite;
+}
+
+/* ---------- footer ---------- */
+.app-footer {
+  text-align: center;
+  padding: 28px 16px 36px;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+.app-footer a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+/* ---------- onboarding overlay ---------- */
+.onboarding-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 1rem;
+}
+.onboarding-overlay.hidden {
+  display: none;
+}
+.onboarding-card {
+  background: var(--bg-card);
+  color: var(--ink);
+  border-radius: var(--radius);
+  padding: 2rem;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: var(--shadow-strong);
+  position: relative;
+}
+.onboarding-card h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  color: var(--accent-deep);
+}
+.onboarding-steps {
+  display: grid;
+  gap: 1.2rem;
+  margin-bottom: 2rem;
+}
+.onboarding-step {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+.onboarding-step-icon {
+  background: var(--accent);
+  color: #fff;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  flex-shrink: 0;
+  font-size: 0.9rem;
+}
+.onboarding-step p {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.onboarding-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--ink-soft);
 }
 
 /* ---------- reduced motion ---------- */
