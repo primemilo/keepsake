@@ -58,8 +58,7 @@ const Speech = (() => {
   }
 
   async function fetchAudio(text, signal) {
-    const lang = CONFIG.LANG;
-    const cacheKey = hashString(text + CONFIG.VOICE_ID + lang);
+    const cacheKey = hashString(text + CONFIG.VOICE_ID);
 
     // 1. Try cache
     const cachedBlob = await getCachedBlob(cacheKey);
@@ -68,13 +67,10 @@ const Speech = (() => {
     }
 
     // 2. Fetch from Fish Audio
-    const body = { text, voice_id: CONFIG.VOICE_ID || undefined };
-    if (lang) body.lang = lang;
-
     const resp = await fetch(CONFIG.TTS_ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
+      body: JSON.stringify({ text, voice_id: CONFIG.VOICE_ID || undefined }),
       signal,
     });
     if (!resp.ok) throw new Error("tts request failed: " + resp.status);

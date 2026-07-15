@@ -160,11 +160,6 @@ body {
 .voice-dropdown-item:last-child { border-bottom:none; }
 .voice-dropdown-item:hover { background:var(--icon-bg); }
 
-/* language selector */
-.lang-select { font-family:inherit; font-size:1rem; padding:0.6rem 1rem; border:2px solid var(--line);
-  border-radius:12px; background:var(--bg-card); color:var(--ink); cursor:pointer; }
-.lang-select:hover { border-color:var(--accent); }
-
 /* voice recording / list */
 .voice-row { display:flex; align-items:center; gap:12px; padding:14px 16px; background:var(--bg-card);
   border:1px solid var(--card-border); border-radius:12px; margin-bottom:10px; }
