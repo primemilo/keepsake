@@ -199,8 +199,12 @@ body {
 .onboarding-overlay { position:fixed; inset:0; background:rgba(0,0,0,.7); backdrop-filter:blur(6px);
   display:flex; align-items:center; justify-content:center; z-index:2000; padding:1rem; }
 .onboarding-overlay.hidden { display:none; }
-.onboarding-card { background:var(--bg-card); color:var(--ink); border-radius:var(--radius); padding:2rem;
-  max-width:500px; width:100%; box-shadow:var(--shadow-strong); position:relative; }
+.onboarding-card {
+  background:var(--bg-card); color:var(--ink); border-radius:var(--radius); padding:2rem;
+  max-width:500px; width:100%; box-shadow:var(--shadow-strong); position:relative;
+  /* Mobile-friendly scroll */
+  max-height:90vh; overflow-y:auto;
+}
 .onboarding-card h2 { font-size:1.8rem; margin-bottom:1.5rem; color:var(--accent-deep); }
 .onboarding-steps { display:grid; gap:1.2rem; margin-bottom:2rem; }
 .onboarding-step { display:flex; gap:1rem; align-items:flex-start; }
