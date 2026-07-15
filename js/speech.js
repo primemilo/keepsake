@@ -1,4 +1,4 @@
-/* Keepsake — speech engine */
+/* Keepsake — speech engine with IndexedDB caching */
 const Speech = (() => {
   let currentAudio = null;
   let stopCurrent = null;
@@ -8,15 +8,81 @@ const Speech = (() => {
   let playing = false;
   let onQueueDone = null;
 
+  // ---------- IndexedDB cache ----------
+  const DB_NAME = "keepsake-cache";
+  const STORE_NAME = "audio";
+  let dbPromise = null;
+
+  function openDB() {
+    if (dbPromise) return dbPromise;
+    dbPromise = new Promise((resolve, reject) => {
+      const req = indexedDB.open(DB_NAME, 1);
+      req.onupgradeneeded = (e) => {
+        const db = e.target.result;
+        if (!db.objectStoreNames.contains(STORE_NAME)) {
+          db.createObjectStore(STORE_NAME);
+        }
+      };
+      req.onsuccess = (e) => resolve(e.target.result);
+      req.onerror = (e) => reject(e.target.error);
+    });
+    return dbPromise;
+  }
+
+  async function getCachedBlob(key) {
+    const db = await openDB();
+    return new Promise((resolve) => {
+      const tx = db.transaction(STORE_NAME, "readonly");
+      const store = tx.objectStore(STORE_NAME);
+      const req = store.get(key);
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => resolve(null);
+    });
+  }
+
+  async function setCachedBlob(key, blob) {
+    const db = await openDB();
+    const tx = db.transaction(STORE_NAME, "readwrite");
+    const store = tx.objectStore(STORE_NAME);
+    store.put(blob, key);
+  }
+
+  function hashString(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      const ch = str.charCodeAt(i);
+      hash = ((hash << 5) - hash) + ch;
+      hash |= 0;
+    }
+    return hash.toString(36);
+  }
+
   async function fetchAudio(text, signal) {
+    const lang = CONFIG.LANG;
+    const cacheKey = hashString(text + CONFIG.VOICE_ID + lang);
+
+    // 1. Try cache
+    const cachedBlob = await getCachedBlob(cacheKey);
+    if (cachedBlob) {
+      return URL.createObjectURL(cachedBlob);
+    }
+
+    // 2. Fetch from Fish Audio
+    const body = { text, voice_id: CONFIG.VOICE_ID || undefined };
+    if (lang) body.lang = lang;
+
     const resp = await fetch(CONFIG.TTS_ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text: text, voice_id: CONFIG.VOICE_ID || undefined }),
-      signal: signal,
+      body: JSON.stringify(body),
+      signal,
     });
     if (!resp.ok) throw new Error("tts request failed: " + resp.status);
     const blob = await resp.blob();
+
+    // 3. Cache the blob for next time (fire and forget)
+    setCachedBlob(cacheKey, blob).catch(() => {});
+
     return URL.createObjectURL(blob);
   }
 
